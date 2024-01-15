@@ -1,4 +1,5 @@
 const express = require('express');
+const loginController = require('./controllers/login');
 
 // ...
 
@@ -10,6 +11,8 @@ app.get('/', (_request, response) => {
 });
 
 app.use(express.json());
+
+app.post('/login', loginController.loginController);
 
 // ...
 
