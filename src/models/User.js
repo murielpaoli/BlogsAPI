@@ -15,12 +15,12 @@ module.exports = (sequelize, DataTypes) => {
     },
   );
 
-/*   User.associate = (models) => {
+  User.associate = (models) => {
 // define o tipo de relacionamento
-User.hasOne(models.Plan,
+User.hasMany(models.BlogPost,
     // define qual a foreign key a ser criada
-      { foreignKey: '', as: '' });
-  }; */
+      { foreignKey: 'user_id', as: 'users' });
+  };
   
     return User;
   };

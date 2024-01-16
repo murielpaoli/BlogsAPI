@@ -17,6 +17,11 @@ app.post('/user', userMiddlewares.validateUserFields, userControllers.createUser
 app.get('/user', authMiddlewares.authenticateToken, userControllers.getAllUsersController);
 app.get('/user/:id', authMiddlewares.authenticateToken, userControllers.getUserById);
 app.post('/categories', authMiddlewares.authenticateToken, categoryControllers.createCategorys);
+app.get(
+  '/categories', 
+  authMiddlewares.authenticateToken, 
+  categoryControllers.getAllCategoriesController,
+);
 
 // É importante exportar a constante `app`,
 // para que possa ser utilizada pelo arquivo `src/server.js`
