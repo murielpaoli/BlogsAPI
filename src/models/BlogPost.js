@@ -1,27 +1,44 @@
+'use strict';
+/* const {Model} = require('sequelize'); */
 module.exports = (sequelize, DataTypes) => {
-    const BlogPost = sequelize.define(
-    'BlogPost',
-    {
-        id: { type: DataTypes.INTEGER, primaryKey: true },
-        title: DataTypes.STRING,
-        content: DataTypes.STRING,
-        userId: { type: DataTypes.INTEGER, foreignKey: true },
-        published: DataTypes.DATE,
-        updated: DataTypes.DATE,
-      },
-    {
-      timestamps: false,
-      tableName: 'BlogPosts',
-      underscored: true,
+  const BlogPost = sequelize.define('BlogPost', {
+    id: {
+      type: DataTypes.INTEGER, 
+      primaryKey: true, 
+      allowNull:false, 
+      autoIncrement: true
     },
-  );
-
-  BlogPost.associate = (models) => {
-// define o tipo de relacionamento
-BlogPost.belongsTo(models.User,
-    // define qual a foreign key a ser criada
-      { foreignKey: 'user_id', as: 'users' });
-  };
-  
-    return BlogPost;
+    title: {
+      type: DataTypes.STRING, 
+      allowNull: false
+    },
+    content: 
+    {
+      type: DataTypes.STRING, 
+      allowNull: false
+    },
+    userId: 
+    {
+      type: DataTypes.INTEGER, 
+      references: {model: 'Users', key: 'id'}},
+    published: 
+    {
+      type:DataTypes.DATE, 
+      allowNull: false
+    },
+    updated: 
+    {
+      type: DataTypes.DATE, 
+      allowNull: false
+    },
+    }, 
+    {
+      tableName: 'blog_posts',
+      timestamps: false,
+      underscored: true,
+      });
+      BlogPost.associate = (models) => {
+          BlogPost.belongsTo(models.User, { foreignKey: 'userId', as: 'user' });
+      }
+      return BlogPost;
   };

@@ -1,28 +1,30 @@
-const { Category } = require('../models');
+const connection = require('../models');
 
-const createCategory = async ({ name }) => {
+const createCategory = async (name) => {
   try {
-    const category = await Category.create({ name });
+    const createdCategory = await connection.Category.create({ name });
+    return createdCategory;
+  } catch (error) {
+    console.error('Error creating category:', error);
+    throw error;
+  }
+};
+
+const getAllCategories = async (name) => {
+  try {
+    const category = await connection.Category
+      .findAll({ where: name });
     return category;
   } catch (error) {
-    console.error(error);
-    throw error; // Rejeita a promessa se ocorrer um erro
+    console.error('Error retrieving category:', error);
+    throw error;
   }
 };
 
-const getAllCategories = async () => {
-  try {
-    const categories = await Category.findAll({
-      attributes: ['id', 'name'],
-    });
-    return categories;
-  } catch (error) {
-    console.error(error);
-    throw new Error('Internal Server Error');
-  }
-};
+const categoryIdService = async (id) => connection.Category.findOne({ where: { id } });
 
 module.exports = {
   createCategory,
   getAllCategories,
+  categoryIdService,
 };

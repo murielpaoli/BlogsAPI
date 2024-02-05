@@ -1,26 +1,38 @@
+'use strict';
+/* const { Model } = require('sequelize'); */
 module.exports = (sequelize, DataTypes) => {
-    const User = sequelize.define(
-    'User',
-    {
-        id: { type: DataTypes.INTEGER, primaryKey: true },
-        email: DataTypes.STRING,
-        password: DataTypes.STRING,
-        displayName: DataTypes.STRING,
-        image: DataTypes.STRING,
-      },
-    {
-      timestamps: false,
-      tableName: 'users',
-      underscored: true,
+  const User = sequelize.define('User', {
+    id: {
+      type: DataTypes.INTEGER, 
+      primaryKey: true, 
+      allowNull:false, 
+      autoIncrement: true},
+    displayName: DataTypes.STRING,
+    
+    email: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: false,
     },
-  );
+    
+    password: {
+      type: DataTypes.STRING, 
+      allowNull: false
+    },
+    
+    image: {
+      type: DataTypes.STRING, 
+    },
+    }, 
+    
+    {
+    tableName: 'users',
+    timestamps: false,
+    underscored: true,
+    });
 
-  User.associate = (models) => {
-// define o tipo de relacionamento
-User.hasMany(models.BlogPost,
-    // define qual a foreign key a ser criada
-      { foreignKey: 'user_id', as: 'users' });
-  };
-  
-    return User;
-  };
+    User.associate = (models) => {
+      User.hasMany(models.BlogPost, { foreignKey: 'userId', as: 'blogPosts' });
+  }
+  return User;
+};

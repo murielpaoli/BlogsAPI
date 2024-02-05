@@ -1,30 +1,38 @@
-const { categoryService } = require('../services');
-const { getAllCategories } = require('../services/category.services');
+const { createCategory, getAllCategories } = require('../services/category.services');
 
 const createCategorys = async (req, res) => {
-  const { name } = req.body;
-
   try {
+    const { name } = req.body;
+
     if (!name) {
       return res.status(400).json({ message: '"name" is required' });
     }
 
-    const category = await categoryService.createCategory({ name });
+    const category = await createCategory(name);
 
     return res.status(201).json(category);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Internal Server Error' });
+    console.error('Error retrieving category:', error);
+
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
-const getAllCategoriesController = async (_req, res) => {
+const getAllCategoriesController = async (req, res) => {
+  const { name } = req.body;
+
   try {
-    const categories = await getAllCategories();
-    return res.status(200).json(categories);
+    const newCat = await getAllCategories(name);
+
+    if (!newCat) {
+      return res.status(500).json({ message: 'Error creating category' });
+    }
+
+    res.status(200).json(newCat);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Internal Server Error' });
+    console.error('Error creating category:', error);
+
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 

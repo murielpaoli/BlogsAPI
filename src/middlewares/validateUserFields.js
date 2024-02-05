@@ -1,13 +1,26 @@
-const { User } = require('../models');
+const db = require('../models');
 
-const validateUserFields = async (req, res, next) => {
-  const { email } = req.body;
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const emailValid = emailRegex.test(email);
-  if (!emailValid) return res.status(400).json({ message: '"email" must be a valid email' }); 
-  const user = await User.findOne({ where: { email } });
-  if (user) return res.status(409).json({ message: 'User already registered' });
-  next();
+const validateUser = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailOK = regex.test(email);
+
+    if (!emailOK) {
+      return res.status(400).json({ message: '"email" must be a valid email' });
+    }
+
+    const emailExist = await db.User.findOne({ where: { email } });
+    if (emailExist) {
+      return res.status(409).json({ message: 'User already registered' });
+    } 
+    next();
+  } catch (error) {
+    console.error('Error in validateUser:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
 };
 
-module.exports = { validateUserFields };
+module.exports = {
+  validateUser,
+};

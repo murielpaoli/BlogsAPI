@@ -1,23 +1,22 @@
-module.exports = (sequelize, DataTypes) => {
-    const Category = sequelize.define(
-    'Category',
-    {
-        id: { type: DataTypes.INTEGER, primaryKey: true },
-        name: DataTypes.STRING,
-      },
-    {
-      timestamps: false,
-      tableName: 'categories',
-      underscored: true,
-    },
-  );
+'use strict';
 
-/*   User.associate = (models) => {
-// define o tipo de relacionamento
-Category.hasOne(models.,
-    // define qual a foreign key a ser criada
-      { foreignKey: '', as: '' });
-  }; */
-  
-    return Category;
-  };
+/* const { Model } = require('sequelize'); */
+module.exports = (sequelize, DataTypes) => {
+  const Category = sequelize.define('Category', {
+    id: {
+      type: DataTypes.INTEGER, 
+      primaryKey: true, 
+      allowNull:false, 
+      autoIncrement: true
+    },
+    name: DataTypes.STRING,
+    }, 
+
+    {
+    tableName: 'categories',
+    timestamps: false,
+    underscored: true,
+    });
+
+  return Category;
+};

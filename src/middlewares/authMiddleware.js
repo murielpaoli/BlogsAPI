@@ -1,23 +1,31 @@
 const jwt = require('jsonwebtoken');
 
-const { JWT_SECRET } = process.env;
+const key = process.env.JWT_SECRET || 'yourSecretToken';
 
-const authenticateToken = (req, res, next) => {
-  const bearerToken = req.header('Authorization');
+function bearertoken(bearerToken) {
+  return bearerToken.split(' ')[1];
+}
+
+const authenticateToken = async (req, res, next) => {
+  const bearerToken = req.header('Authorization'); // usuario do token
 
   if (!bearerToken) {
     return res.status(401).json({ message: 'Token not found' });
   }
 
-  const token = bearerToken.split(' ')[1];
+  const token = bearertoken(bearerToken);
 
   try {
-    const payload = jwt.verify(token, JWT_SECRET);
+    const payload = jwt.verify(token, key);
+
     req.user = payload;
-    return next();
-  } catch (err) {
+
+    next();
+  } catch (error) {
     return res.status(401).json({ message: 'Expired or invalid token' });
   }
 };
 
-module.exports = { authenticateToken };
+module.exports = {
+  authenticateToken,
+};

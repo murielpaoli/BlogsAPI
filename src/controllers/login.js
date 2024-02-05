@@ -1,29 +1,32 @@
 const jwt = require('jsonwebtoken');
-const loginService = require('../services/login.services');
+const { loginService } = require('../services/login.services');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'secretpassword';
+const key = process.env.JWT_SECRET || 'yourSecretToken';
 
-const loginController = (req, res) => {
-  const { email, password } = req.body;
-  // Verificando se todos os campos estão preenchidos
-  if (!email || !password) {
-    return loginService.errorResponse(res, 'Some required fields are missing', 400);
+const loginController = async (req, res) => {
+  try {
+    const { status, data } = await loginService(req.body);
+
+    if (data.message) {
+      return res.status(status).json(data);
+    }
+
+    const payload = {
+      id: data.id,
+      email: data.email,
+    };
+
+    const token = jwt.sign(payload, key, {
+      expiresIn: '7d',
+    });
+
+    return res.status(200).json({ token });
+  } catch (error) {
+    console.error('Error in loginController:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
   }
-  // Verificando se o usuário existe e as credenciais estão corretas
-  const user = loginService.findUser(email, password);
-  if (!user) {
-    return loginService.errorResponse(res, 'Invalid fields', 400);
-  }
-  // Gerando o jason web token
-  const token = jwt.sign(
-    {
-      payload: { id: user.id, displayName: user.displayName, email: user.email, image: user.image,
-      },
-    },
-    JWT_SECRET,
-    { expiresIn: '1h' },
-  );
-  loginService.successResponse(res, { token });
 };
 
-module.exports = { loginController };
+module.exports = {
+  loginController,
+};

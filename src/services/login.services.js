@@ -1,16 +1,24 @@
-const users = [
-  { id: 1, email: 'lewishamilton@gmail.com', password: '123456' },
-];
+const db = require('../models');
 
-const findUser = (email, password) => users.find((u) => u.email === email 
-&& u.password === password);
+const loginService = async ({ email, password }) => {
+  try {
+    const response = await db.User.findOne({ where: { email, password } });
 
-const successResponse = (res, data) => {
-  res.json(data);
+    if (!response) {
+      return { status: 400, data: { message: 'Invalid fields' } };
+    }
+
+    if (response.password !== password) {
+      return { status: 400, data: { message: 'Invalid fields' } };
+    }
+
+    return { status: 200, data: response };
+  } catch (error) {
+    console.error('Error in loginService:', error);
+    throw new Error('Internal Server Error');
+  }
 };
 
-const errorResponse = (res, message, status) => {
-  res.status(status).json({ message });
+module.exports = {
+  loginService,
 };
-
-module.exports = { findUser, successResponse, errorResponse };
