@@ -40,6 +40,14 @@ Este projeto consiste no desenvolvimento de uma API e um banco de dados para a p
 
 <details>
   <summary><strong>Linguagens de Programação</strong></summary><br />
+  <strong>JavaScript</strong><br />
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=javascript" alt="Node.js">
+  </a>
+</details>
+
+<details>
+  <summary><strong>Ambiente de execução</strong></summary><br />
   <strong>Node.js</strong><br />
   <a href="https://skillicons.dev">
     <img src="https://skillicons.dev/icons?i=nodejs" alt="Node.js">
